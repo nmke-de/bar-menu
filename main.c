@@ -9,12 +9,12 @@ static void print_list(char **list, int len, int selection, int offset){
 	int start = max(0, selection-row+1+offset);
 	int end = min(len, row+start);
 	for(int i = start; i < end; i++){
-		if (selection == i) fputc('>', stderr);
-		else fputc(' ', stderr);
+		if (selection == i) bputc('>');
+		else bputc(' ');
 		bputs(list[i]);
-		if (selection == i) fputc('<', stderr);
-		else fputc(' ', stderr);
-		fputc('\n', stderr);
+		if (selection == i) bputc('<');
+		else bputc(' ');
+		bputc('\n');
 	}
 }
 
