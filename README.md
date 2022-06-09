@@ -17,7 +17,9 @@ I tried [term-dmenu](https://github.com/seirdy/term-dmenu) by Seirdy, but I coul
 
 ## Build
 
-Makefile incoming.
+Type `make` if you have make installed. Please note that the default compiler is `cproc` and static linking. Edit the Makefile to suit your needs.
+
+If you do not have `make` installed, you can refer to the commands in the Makefile to compile the program.
 
 ## Usage
 
