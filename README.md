@@ -27,3 +27,5 @@ bar-menu list of items to display
 
 So far, `bar-menu` does not support piping.
 
+To navigate between the options, use `j` and `k`. Pressing the `Return` key prints the selected option to stdout and exits the program.
+
