@@ -2,12 +2,18 @@
 #define max(a,b) (a>b?a:b)
 #define min(a,b) (a<b?a:b)
 
-static void print_list(char **list, int len, int selection, int offset){
+static void print_list(char **list, int len, int selection, int offset, char *query){
 	int row = 0, col = 0;
 	bsize(&row, &col);
 	--row;
 	int start = max(0, selection-row+1+offset);
-	int end = min(len, row+start);
+	int end = min(len, row+start-1);
+	if (selection == -1) bputc('>');
+	else bputc(' ');
+	bputs(query);
+	if (selection == -1) bputc('<');
+	else bputc(' ');
+	bputc('\n');
 	for(int i = start; i < end; i++){
 		if (selection == i) bputc('>');
 		else bputc(' ');
@@ -24,26 +30,32 @@ int main(int argc, char **argv){
 	char c;
 	int selection = 0;
 	char **list = argv+1;
+	char query[64];
+	for(int i = 0; i < 64; i++) query[i] = 0;
 	int len = argc - 1;
 	int offset = 2;
 	// Print list
-	print_list(list, len, selection, offset);
+	print_list(list, len, selection, offset, query);
 	while((c = fgetc(stdin)) != '\n'){
 		switch (c){
+			case '/':
+				bread(query, 64, "Filter: ");
+				break;
 			case 'j':
 				if (selection < len - 1) ++selection;
 				break;
 			case 'k':
-				if (selection > 0) --selection;
+				if (selection > -1) --selection;
 				break;
 			default:
 				continue;
 		}
 		bwash();
 		// Print list
-		print_list(list, len, selection, offset);
+		print_list(list, len, selection, offset, query);
 	}
 	bquit();
-	fputs(list[selection], stdout);
+	if(selection == -1) fputs(query, stdout);
+	else fputs(list[selection], stdout);
 	fputc('\n', stdout);
 }
