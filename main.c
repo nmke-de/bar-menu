@@ -3,7 +3,7 @@
 #define max(a,b) (a>b?a:b)
 #define min(a,b) (a<b?a:b)
 
-static void print_list(char **list, int len, int selection, int offset, char *query){
+static void print_list(char **list, int len, int selection, int offset, char *query, int *visibility){
 	int row = 0, col = 0;
 	bsize(&row, &col);
 	--row;
@@ -16,7 +16,7 @@ static void print_list(char **list, int len, int selection, int offset, char *qu
 	else bputc(' ');
 	bputc('\n');
 	for(int i = start; i < end; i++){
-		if (strstr(list[i], query) == NULL) continue;
+		if (!visibility[i]) continue;
 		if (selection == i) bputc('>');
 		else bputc(' ');
 		bputs(list[i]);
@@ -30,18 +30,21 @@ int main(int argc, char **argv){
 	if (argc < 2) return 1;
 	binit();
 	char c;
-	int selection = 0;
+	int selection = -1;
 	char **list = argv+1;
 	char query[64];
 	for(int i = 0; i < 64; i++) query[i] = 0;
 	int len = argc - 1;
+	int visibility[len];
+	for(int i = 0; i < len; i++) visibility[i] = 1;
 	int offset = 2;
 	// Print list
-	print_list(list, len, selection, offset, query);
+	print_list(list, len, selection, offset, query, visibility);
 	while((c = fgetc(stdin)) != '\n'){
 		switch (c){
 			case '/':
 				bread(query, 64, "Filter: ");
+				for(int i = 0; i < len; i++) visibility[i] = strstr(list[i], query) == NULL ? 0 : 1;
 				break;
 			case 'j':
 				if (selection < len - 1) ++selection;
@@ -54,7 +57,7 @@ int main(int argc, char **argv){
 		}
 		bwash();
 		// Print list
-		print_list(list, len, selection, offset, query);
+		print_list(list, len, selection, offset, query, visibility);
 	}
 	bquit();
 	if(selection == -1) fputs(query, stdout);
