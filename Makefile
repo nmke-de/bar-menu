@@ -1,6 +1,6 @@
 
 LIBC = /usr/lib/libc.a
-CC = cproc
+CC = cc
 
 build: bar-menu
 
