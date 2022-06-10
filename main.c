@@ -1,3 +1,4 @@
+#include <string.h>
 #include "BarnabasBox/barnabas.h"
 #define max(a,b) (a>b?a:b)
 #define min(a,b) (a<b?a:b)
@@ -15,6 +16,7 @@ static void print_list(char **list, int len, int selection, int offset, char *qu
 	else bputc(' ');
 	bputc('\n');
 	for(int i = start; i < end; i++){
+		if (strstr(list[i], query) == NULL) continue;
 		if (selection == i) bputc('>');
 		else bputc(' ');
 		bputs(list[i]);
