@@ -16,10 +16,9 @@ static void print_list(char **list, int len, int selection, int offset, char *qu
 	else bputc(' ');
 	bputc('\n');
 	for(int i = start; i < end; i++){
-		if (!visibility[i]) continue;
 		if (selection == i) bputc('>');
 		else bputc(' ');
-		bputs(list[i]);
+		bputs(list[visibility[i]]);
 		if (selection == i) bputc('<');
 		else bputc(' ');
 		bputc('\n');
@@ -35,19 +34,22 @@ int main(int argc, char **argv){
 	char query[64];
 	for(int i = 0; i < 64; i++) query[i] = 0;
 	int len = argc - 1;
+	int vislen = len;
 	int visibility[len];
-	for(int i = 0; i < len; i++) visibility[i] = 1;
+	for(int i = 0; i < len; i++) visibility[i] = -1;
 	int offset = 2;
 	// Print list
-	print_list(list, len, selection, offset, query, visibility);
+	print_list(list, vislen, selection, offset, query, visibility);
 	while((c = fgetc(stdin)) != '\n'){
 		switch (c){
 			case '/':
 				bread(query, 64, "Filter: ");
-				for(int i = 0; i < len; i++) visibility[i] = strstr(list[i], query) == NULL ? 0 : 1;
+				vislen = 0;
+				for(int i = 0; i < len; i++) if(strstr(list[i], query) != NULL) visibility[vislen++] = i;
+				selection = 0;
 				break;
 			case 'j':
-				if (selection < len - 1) ++selection;
+				if (selection < vislen - 1) ++selection;
 				break;
 			case 'k':
 				if (selection > -1) --selection;
@@ -57,10 +59,10 @@ int main(int argc, char **argv){
 		}
 		bwash();
 		// Print list
-		print_list(list, len, selection, offset, query, visibility);
+		print_list(list, vislen, selection, offset, query, visibility);
 	}
 	bquit();
 	if(selection == -1) fputs(query, stdout);
-	else fputs(list[selection], stdout);
+	else fputs(list[visibility[selection]], stdout);
 	fputc('\n', stdout);
 }
