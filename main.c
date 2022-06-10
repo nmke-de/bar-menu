@@ -36,7 +36,7 @@ int main(int argc, char **argv){
 	int len = argc - 1;
 	int vislen = len;
 	int visibility[len];
-	for(int i = 0; i < len; i++) visibility[i] = -1;
+	for(int i = 0; i < len; i++) visibility[i] = i;
 	int offset = 2;
 	// Print list
 	print_list(list, vislen, selection, offset, query, visibility);
