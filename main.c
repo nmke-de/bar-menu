@@ -55,6 +55,7 @@ int main(int argc, char **argv){
 				if (selection > -1) --selection;
 				break;
 			case 'q':
+			case '\033':
 				bquit();
 				return 2;
 			default:
