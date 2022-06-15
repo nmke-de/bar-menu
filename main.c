@@ -54,6 +54,9 @@ int main(int argc, char **argv){
 			case 'k':
 				if (selection > -1) --selection;
 				break;
+			case 'q':
+				bquit();
+				return 2;
 			default:
 				continue;
 		}
